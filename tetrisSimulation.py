@@ -85,7 +85,7 @@ class TetrisSimulation:
 
     def get_all_possible_states(self, tetromino):
         all_states = []
-        for rotation in range(4):  # Tetrominos typically have 4 possible rotations
+        for rotation in range(4):  
             tetromino.set_rotation(rotation)
             for col in range(self.width-tetromino.width+1):
                 all_states.append(self.place_tetromino(tetromino,col))
@@ -95,7 +95,7 @@ class TetrisSimulation:
         return np.max(np.argmax(board, axis=0), initial=-1) + 1
 
     def holes(self, board):
-        return np.sum(board[:-1, :] == 0)  # Count unoccupied cells with an occupied cell above
+        return np.sum(board[:-1, :] == 0)
 
     def connected_holes(self, board):
         holes_count = 0
@@ -118,7 +118,6 @@ class TetrisSimulation:
     def max_well_depth(self, board):
         well_depths = []
         for col in range(board.shape[1] - 1):
-            # Check if there are occurrences of 1 in both columns
             if np.any(board[:, col] == 1) and np.any(board[:, col + 1] == 1):
                 well_depths.append(max(0, np.min(np.where(board[:, col] == 1)[0]) - np.min(np.where(board[:, col + 1] == 1)[0])))
             else:
@@ -152,9 +151,7 @@ class TetrisSimulation:
         completed_rows = np.all(board, axis=1)
         rows_removed = np.sum(completed_rows)
         if np.any(completed_rows):
-            # Remove completed rows
             board = board[~completed_rows, :]
-            # Add new empty rows at the top
             new_rows = np.zeros((np.sum(completed_rows), board.shape[1]), dtype=int)
             board = np.vstack((new_rows, board))
         return board, rows_removed
@@ -227,7 +224,7 @@ class TetrisSimulation:
 
 
 #MAIN
-weight_vector = np.random.rand(11)  # Replace with your actual weight vector
+weight_vector = np.random.rand(11) # To be optimised using ACO
 tetris_sim = TetrisSimulation(20, 10, weight_vector)
 
 m, l = tetris_sim.simulate_game()
