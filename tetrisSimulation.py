@@ -119,7 +119,7 @@ class TetrisSimulation:
 
         return holes_count
 
-    def altitude_difference(board):
+    def altitude_difference(self, board):
         well_depths = []
         for col in range(board.shape[1]):
             well_depths.append(min(np.where(board[:,col]==1)[0]))
@@ -128,7 +128,7 @@ class TetrisSimulation:
         min_free_row = max(well_depths)
         return min_free_row - max_occupied_row
 
-    def max_well_depth(board):
+    def max_well_depth(self, board):
         well_depths = []
 
         for col in range(board.shape[1]):
