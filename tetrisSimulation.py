@@ -257,11 +257,3 @@ class TetrisSimulation:
                 break
         return self.number_of_moves, self.removed_lines
 
-
-#MAIN
-weight_vector = np.random.rand(11) # To be optimised using ACO
-tetris_sim = TetrisSimulation(20, 10, weight_vector)
-
-m, l = tetris_sim.simulate_game()
-print("Moves made:", m)
-print("Lines removed:", l)
