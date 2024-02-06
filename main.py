@@ -13,11 +13,11 @@ def eval_function(solution):
         weight_vector.append(decimal_value)
     tetris_sim = TetrisSimulation(20, 10, weight_vector)
     m, l = tetris_sim.simulate_game()
-    return l
+    return m
 
-vector_size = 55
+vector_size = 88
 num_ants = 10
-max_iterations = 1
+max_iterations = 10
 ant_colony = AntColony(vector_size, num_ants,eval_function,max_iterations)
 best_solution, best_score = ant_colony.run()
 

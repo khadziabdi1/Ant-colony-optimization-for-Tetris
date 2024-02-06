@@ -49,7 +49,7 @@ class AntColony:
                     delta_pheromones[choice, i] += ant_score / global_best_solution
 
             self.update_pheromones(delta_pheromones)
-            if best_ant_score > 1000:
+            if best_ant_score > 15000:
                 break
             print(f"Iteration {iteration + 1}: Best Score {best_ant_score}")
         
