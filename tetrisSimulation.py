@@ -225,7 +225,7 @@ class TetrisSimulation:
                 best_state_value = evaluation
                 best_state = state
                 best_state_removed_lines = removed_lines
-        self.board = best_state
+        self.board = self.remove_completed_rows(best_state)[0]
         self.removed_lines += best_state_removed_lines
         self.number_of_moves += 1 
         return 0
@@ -249,9 +249,7 @@ class TetrisSimulation:
         return rez
 
     def simulate_game(self):
-        i = 0
         while(1):
-            i+=1
             t = Tetromino()
             exit = self.make_move(t)
             if exit:
