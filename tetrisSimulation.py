@@ -115,13 +115,22 @@ class TetrisSimulation:
         min_free_row = np.min(np.where(board[max_occupied_row:, :] == 0)[0] + max_occupied_row)
         return max_occupied_row - min_free_row
 
-    def max_well_depth(self, board):
+    def max_well_depth(board):
         well_depths = []
-        for col in range(board.shape[1] - 1):
-            if np.any(board[:, col] == 1) and np.any(board[:, col + 1] == 1):
-                well_depths.append(max(0, np.min(np.where(board[:, col] == 1)[0]) - np.min(np.where(board[:, col + 1] == 1)[0])))
+
+        for col in range(board.shape[1]):
+            left_side = board[:, :col] if col > 0 else np.ones_like(board[:, :1])
+            right_side = board[:, col+1:] if col < board.shape[1] - 1 else np.ones_like(board[:, -1:])
+
+            left_occupied_row = np.min(np.where(left_side == 1)[0]) if np.any(left_side == 1) else board.shape[0]
+            right_occupied_row = np.min(np.where(right_side == 1)[0]) if np.any(right_side == 1) else board.shape[0]
+
+            well_depth = min(np.where(board[:,col]==1)[0])-max(left_occupied_row, right_occupied_row)
+            if(well_depth > 0):
+                well_depths.append(well_depth)
             else:
                 well_depths.append(0)
+                
         return max(well_depths, default=0)
 
     def sum_of_wells(self, board):
