@@ -95,7 +95,7 @@ class TetrisSimulation:
         return self.height-np.min(np.argmax(board, axis=0))
 
     def holes(self, board):
-        return np.sum(board[:-1, :] == 0)
+        return np.sum(board[np.min(np.argmax(board, axis=0)):,:] == 0)
 
     def connected_holes(self, board):
         holes_count = 0
