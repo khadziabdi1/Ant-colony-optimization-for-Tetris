@@ -98,14 +98,24 @@ class TetrisSimulation:
         return np.sum(board[np.min(np.argmax(board, axis=0)):,:] == 0)
 
     def connected_holes(self, board):
-        holes_count = 0
+        board = deepcopy(board[np.min(np.argmax(board, axis=0)):,:])
         visited = np.zeros_like(board, dtype=bool)
+        holes_count = 0
+
+        def dfs(row, col):
+            nonlocal visited
+            visited[row, col] = True
+            for i in [-1, 1]:
+                new_row, new_col = row + i, col
+                if 0 <= new_row < board.shape[0] and not visited[new_row, new_col] and board[new_row, new_col] == 0:
+                    dfs(new_row, new_col)
+            return
 
         for col in range(board.shape[1]):
-            for row in range(board.shape[0] - 1):
-                if board[row, col] == 0 and not visited[row, col] and board[row + 1, col] == 1:
+            for row in range(board.shape[0]):
+                if board[row, col] == 0 and not visited[row, col]:
                     holes_count += 1
-                    visited[row:, col] = True
+                    dfs(row, col)
 
         return holes_count
 
