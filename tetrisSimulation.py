@@ -122,23 +122,28 @@ class TetrisSimulation:
     def altitude_difference(self, board):
         well_depths = []
         for col in range(board.shape[1]):
-            well_depths.append(min(np.where(board[:,col]==1)[0]))
+            occurrences = np.where(board[:, col] == 1)[0]
+            well_depths.append(min(occurrences) if occurrences.size > 0 else board.shape[0])
+
         occupied_rows, _ = np.where(board == 1)
-        max_occupied_row = np.min(occupied_rows)
+        max_occupied_row = np.min(occupied_rows) if occupied_rows.size > 0 else board.shape[0]
         min_free_row = max(well_depths)
+        
         return min_free_row - max_occupied_row
 
     def max_well_depth(self, board):
         well_depths = []
 
         for col in range(board.shape[1]):
-            left_side = board[:, :col] if col > 0 else np.ones_like(board[:, :1])
-            right_side = board[:, col+1:] if col < board.shape[1] - 1 else np.ones_like(board[:, -1:])
+            left_side = board[:, col-1] if col-1 >= 0 else np.ones_like(board[:, :1])
+            right_side = board[:, col+1] if col+1 <= board.shape[1] - 1 else np.ones_like(board[:, -1:])
 
             left_occupied_row = np.min(np.where(left_side == 1)[0]) if np.any(left_side == 1) else board.shape[0]
             right_occupied_row = np.min(np.where(right_side == 1)[0]) if np.any(right_side == 1) else board.shape[0]
 
-            well_depth = min(np.where(board[:,col]==1)[0])-max(left_occupied_row, right_occupied_row)
+            occurrences = np.where(board[:, col] == 1)[0]
+            well_depth = min(occurrences) - max(left_occupied_row, right_occupied_row) if occurrences.size > 0 else 0
+
             if(well_depth > 0):
                 well_depths.append(well_depth)
             else:
@@ -150,13 +155,15 @@ class TetrisSimulation:
         well_depths = []
 
         for col in range(board.shape[1]):
-            left_side = board[:, :col] if col > 0 else np.ones_like(board[:, :1])
-            right_side = board[:, col+1:] if col < board.shape[1] - 1 else np.ones_like(board[:, -1:])
+            left_side = board[:, col-1] if col-1 >= 0 else np.ones_like(board[:, :1])
+            right_side = board[:, col+1] if col+1 <= board.shape[1] - 1 else np.ones_like(board[:, -1:])
 
             left_occupied_row = np.min(np.where(left_side == 1)[0]) if np.any(left_side == 1) else board.shape[0]
             right_occupied_row = np.min(np.where(right_side == 1)[0]) if np.any(right_side == 1) else board.shape[0]
 
-            well_depth = min(np.where(board[:,col]==1)[0])-max(left_occupied_row, right_occupied_row)
+            occurrences = np.where(board[:, col] == 1)[0]
+            well_depth = min(occurrences) - max(left_occupied_row, right_occupied_row) if occurrences.size > 0 else 0
+
             if(well_depth > 0):
                 well_depths.append(well_depth)
             else:
