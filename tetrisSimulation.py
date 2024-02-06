@@ -139,7 +139,7 @@ class TetrisSimulation:
         return np.sum(board)
 
     def weighted_blocks(self, board):
-        return np.sum([row * np.sum(board[row, :]) for row in range(board.shape[0])])
+        return np.sum([(self.height-row) * np.sum(board[row, :]) for row in range(board.shape[0])])
 
     def row_transitions(self, board):
         return np.sum(board[:, :-1] != board[:, 1:])
