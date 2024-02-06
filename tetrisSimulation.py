@@ -1,4 +1,5 @@
 import numpy as np
+np.random.seed(42)
 from random import randint
 from copy import deepcopy
 
@@ -225,7 +226,7 @@ class TetrisSimulation:
                 best_state = state
                 best_state_removed_lines = removed_lines
         self.board = best_state
-        self.removed_lines += removed_lines
+        self.removed_lines += best_state_removed_lines
         self.number_of_moves += 1 
         return 0
 
@@ -256,4 +257,3 @@ class TetrisSimulation:
             if exit:
                 break
         return self.number_of_moves, self.removed_lines
-

@@ -1,5 +1,5 @@
 import numpy as np
-from tetrisSimulation import TetrisSimulation
+#np.random.seed(42)
 class AntColony:
     def __init__(self, vector_size, num_ants, fitness_function, max_iterations=50, alpha=1, beta=2, evaporation_rate=0.5):
         self.vector_size = vector_size
@@ -37,43 +37,31 @@ class AntColony:
             solutions = []
             for ant in range(self.num_ants):
                 solution = self.generate_solution()
-                solutions.append((solution, self.fitness_function(solution)))
+                fitness = self.fitness_function(solution)
+                solutions.append((solution, fitness))
             
-            best_solutions.append(max(solutions, key=lambda x: x[1]))
+            best_ant_solution, best_ant_score = max(solutions, key=lambda x: x[1])
+            best_solutions.append((best_ant_solution, best_ant_score))
             delta_pheromones = np.zeros((2, self.vector_size))
-
+            global_best_solution = max(best_solutions, key= lambda x:x[1])[1]
             for ant_solution, ant_score in solutions:
                 for i, choice in enumerate(ant_solution):
-                    delta_pheromones[choice, i] += ant_score / max(best_solutions, key= lambda x:x[1])[1]
+                    delta_pheromones[choice, i] += ant_score / global_best_solution
 
             self.update_pheromones(delta_pheromones)
+            if best_ant_score > 1000:
+                break
+            print(f"Iteration {iteration + 1}: Best Score {best_ant_score}")
+        
+        weight_vector = []
+        best_solution = max(best_solutions, key= lambda x:x[1])
+        for i in range(0, len(best_solution[0]), len(best_solution[0])//11):
+            chunk = best_solution[0][i:i + len(best_solution[0])//11]
+            sign_bit = chunk[0]
+            remaining_bits = chunk[1:]
+            decimal_value = int(''.join(map(str, remaining_bits)), 2)
+            if sign_bit == 1:
+                decimal_value = -decimal_value
+            weight_vector.append(decimal_value)
+        return weight_vector, best_solution[1]
 
-        return max(best_solutions, key= lambda x:x[1])
-
-def eval_function(solution):
-    weight_vector = np.zeros(11,dtype=int)
-    for i in range(11):
-        for j in range(1,(int(len(solution)/11))):
-            weight_vector[i] += solution[j+i*(int(len(solution)/11))] * 2 ** ((int(len(solution)/11))-1-j)
-        weight_vector[i] *= -solution[i*(int(len(solution)/11))]
-    tetris_sim = TetrisSimulation(20, 10, weight_vector)
-    m, l = tetris_sim.simulate_game()
-    return m
-
-def main():
-    vector_size = 110
-    num_ants = 10
-    max_iterations = 50
-    ant_colony = AntColony(vector_size, num_ants,eval_function,max_iterations)
-    best_solution, best_score = ant_colony.run()
-
-    weight_vector = np.zeros(11,dtype=int)
-    for i in range(11):
-        for j in range(1,(int(len(best_solution)/11))):
-            weight_vector[i] += best_solution[j+i*(int(len(best_solution)/11))] * 2 ** ((int(len(best_solution)/11))-1-j)
-        weight_vector[i] *= -best_solution[i*(int(len(best_solution)/11))]
-
-    print(f"Best Solution {weight_vector} | Best Score {best_score}")
-
-if __name__ == "__main__":
-    main()
