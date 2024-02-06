@@ -92,7 +92,7 @@ class TetrisSimulation:
         return [value for value in all_states if value is not None]
 
     def pile_height(self, board):
-        return np.max(np.argmax(board, axis=0), initial=-1) + 1
+        return self.height-np.min(np.argmax(board, axis=0))
 
     def holes(self, board):
         return np.sum(board[:-1, :] == 0)
