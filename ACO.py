@@ -37,21 +37,19 @@ class AntColony:
             solutions = []
             for ant in range(self.num_ants):
                 solution = self.generate_solution()
-                fitness = self.fitness_function(solution)
-                solutions.append((solution, fitness))
+                fitness, lines_removed = self.fitness_function(solution)
+                solutions.append((solution, fitness, lines_removed))
             
-            best_ant_solution, best_ant_score = max(solutions, key=lambda x: x[1])
-            best_solutions.append((best_ant_solution, best_ant_score))
+            best_ant_solution, best_ant_score, best_ant_lines_removed = max(solutions, key=lambda x: x[1])
+            best_solutions.append((best_ant_solution, best_ant_score, best_ant_lines_removed))
             delta_pheromones = np.zeros((2, self.vector_size))
             global_best_solution = max(best_solutions, key= lambda x:x[1])[1]
-            for ant_solution, ant_score in solutions:
+            for ant_solution, ant_score, _ in solutions:
                 for i, choice in enumerate(ant_solution):
                     delta_pheromones[choice, i] += ant_score / global_best_solution
 
             self.update_pheromones(delta_pheromones)
-            if best_ant_score > 15000:
-                break
-            print(f"Iteration {iteration + 1}: Best Score {best_ant_score}")
+            print(f"Iteration {iteration + 1}: Best Score {best_ant_score}, lines removed: {best_ant_lines_removed}")
         
         weight_vector = []
         best_solution = max(best_solutions, key= lambda x:x[1])
@@ -63,5 +61,5 @@ class AntColony:
             if sign_bit == 1:
                 decimal_value = -decimal_value
             weight_vector.append(decimal_value)
-        return weight_vector, best_solution[1]
+        return weight_vector, best_solution[1], best_solution[2]
 

@@ -1,6 +1,9 @@
 from tetrisSimulation import TetrisSimulation
+import random
+weight_vector = [-17636, 18574, -23919, -16797, 21146, -11704, 30208, -30106, -21136, -31399, -29620]
 
-weight_vector = [-12, 4, -12, -2, 14, -7, 1, -15, -11, -11, -15]
+#for i in range(11):
+#    weight_vector.append(random.randint(-1000,1000))
 
 sim = TetrisSimulation(20,10,weight_vector)
 rez = sim.simulate_game()
